@@ -1,0 +1,89 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: weight-app
+  namespace: app
+  labels:
+    app: weight-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: weight-app
+  template:
+    metadata:
+      labels:
+        app: weight-app
+    spec:
+      containers:
+        - name: weight-app
+          image: 'ronkaiser86/wtapp:latest'
+          ports:
+            - containerPort: 8080
+              protocol: TCP
+          env:
+            - name: PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: PORT
+            - name: HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: HOST
+            - name: NODE_ENV
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: NODE_ENV
+            - name: HOST_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: HOST_URL
+            - name: COOKIE_ENCRYPT_PWD
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: COOKIE_ENCRYPT_PWD
+            - name: OKTA_ORG_URL
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: OKTA_ORG_URL
+            - name: OKTA_CLIENT_ID
+              valueFrom:
+                secretKeyRef:
+                  name: weight-app-secret
+                  key: OKTA_CLIENT_ID
+            - name: OKTA_CLIENT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: weight-app-secret
+                  key: OKTA_CLIENT_SECRET
+            - name: PGHOST
+              valueFrom:
+                secretKeyRef:
+                  name: weight-app-secret
+                  key: PGHOST
+            - name: PGUSERNAME
+              valueFrom:
+                secretKeyRef:
+                  name: weight-app-secret
+                  key: PGUSERNAME
+            - name: PGDATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: PGDATABASE
+            - name: PGPASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: weight-app-secret
+                  key: PGPASSWORD
+            - name: PGPORT
+              valueFrom:
+                configMapKeyRef:
+                  name: weight-app-cm
+                  key: PGPORT
